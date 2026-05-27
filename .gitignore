@@ -1,0 +1,11 @@
+*.exe
+*.o
+*.obj
+
+wpcap.dll
+Packet.dll
+
+.vscode/
+
+*.pcap
+*.log
