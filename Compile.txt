@@ -1,0 +1,3 @@
+gcc ARP.c -o arp_spoof -lwpcap -lws2_32
+
+gcc ARP.c -o ARP.exe -I ../npcap-sdk-1.16/Include -L ../npcap-sdk-1.16/Lib/x64 -lwpcap -lws2_32

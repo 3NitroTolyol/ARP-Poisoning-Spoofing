@@ -3,7 +3,7 @@
 #include <winsock2.h>
 #include <pcap.h>
 
-int main(){
+pcap_t*  select_and_open_adapter(){
 
     int choice;
     pcap_if_t *alldevs;
@@ -15,7 +15,7 @@ int main(){
 
     if(pcap_findalldevs(&alldevs, errbuf) == -1){
         fprintf(stderr, "%s\n", errbuf);
-        exit(1);
+        return NULL;
     }
 
     for(d = alldevs; d != NULL; d = d->next)
@@ -30,7 +30,7 @@ int main(){
     if(i == 0)
     {
         printf("(No interfaces found)");
-        return 0;
+        return NULL;
     }
 //doing choice 
     
@@ -53,14 +53,17 @@ int main(){
         }
         if(d==NULL){
             printf("Error: Invalid adapter number!\n");
+            pcap_freealldevs(alldevs); 
+            return NULL;
         }
 //open_live
     pcap_t *handle;
     
     handle = pcap_open_live(d->name, BUFSIZ, 1 , 1000, errbuf);
     if(handle == NULL){
-        fprintf(stderr, "Couldn't open device %s: %s\n", d, errbuf);
-        return(2);
+        fprintf(stderr, "Couldn't open device %s: %s\n", d->name, errbuf);
+        pcap_freealldevs(alldevs);
+        return NULL;
     }
     
 /*Если ваша программа не поддерживает заголовки
@@ -69,18 +72,16 @@ int main(){
 
     if (pcap_datalink(handle) != DLT_EN10MB) 
     {
-    fprintf(stderr, "Device %s doesn't provide Ethernet headers -not  supported\n", d);
-    return(2);
+    fprintf(stderr, "Device %s doesn't provide Ethernet headers -not  supported\n", d->name);
+    pcap_freealldevs(alldevs);
+    return NULL;
     }
-
-
-
 
 
     pcap_freealldevs(alldevs);
 
     
-    return 0;
+    return handle;
 
 
 }
