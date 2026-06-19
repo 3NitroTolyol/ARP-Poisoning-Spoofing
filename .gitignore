@@ -1,11 +1,13 @@
+
 *.exe
 *.o
 *.obj
 
-wpcap.dll
-Packet.dll
+*.pcap
+*.log
 
 .vscode/
 
-*.pcap
-*.log
+*.dll
+
+npcap-sdk-*/
